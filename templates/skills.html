@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Gap Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Resume Analysis</h1>
+            <p class="subtitle">Skill gap analysis for the selected job role.</p>
+
+            <div class="role-box">
+                <p>Selected Job Role</p>
+                <h2>{{ role }}</h2>
+            </div>
+
+            <div class="match-section">
+                <p class="section-title">Skill Match</p>
+                <div class="match-percentage">{{ skill_match_percentage }}%</div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="--progress: {{ skill_match_percentage }}%;"></div>
+                </div>
+
+                <p class="match-label">Overall Skill Match</p>
+                <p class="match-count">{{ matched_skills|length }} matched out of {{ required_skills|length }} required
+                    skills</p>
+            </div>
+
+            <div class="chart-card">
+                <h2>Skill Match Overview</h2>
+                <div class="chart-container">
+                    <canvas id="skillChart" data-matched="{{ matched_skills|length }}"
+                        data-missing="{{ missing_skills|length }}"></canvas>
+                </div>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-card matched">
+                    <h2>Matched Skills</h2>
+                    {% if matched_skills %}
+                    <ul>
+                        {% for skill in matched_skills %}
+                        <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No matched skills.</p>
+                    {% endif %}
+                </div>
+
+                <div class="skill-card missing">
+                    <h2>Missing Skills</h2>
+                    {% if missing_skills %}
+                    <ul>
+                        {% for skill in missing_skills %}
+                        <li>{{ skill }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No missing skills.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="skill-card extra">
+                <h2>Extra Skills</h2>
+                {% if extra_skills %}
+                <div class="skill-list">
+                    {% for skill in extra_skills %}
+                    <span>{{ skill }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No extra skills.</p>
+                {% endif %}
+            </div>
+
+            <div class="skill-card required">
+                <h2>Required Skills</h2>
+                <div class="skill-list">
+                    {% for skill in required_skills %}
+                    <span>{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="skill-card recommendations">
+                <h2>Skill Gap Recommendations</h2>
+
+                {% if recommendations %}
+                <div class="recommendation-list">
+                    {% for item in recommendations %}
+                    <div class="recommendation-item">
+                        <h3>{{ item.skill }}</h3>
+                        <p>{{ item.recommendation }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>No skill gaps found. Great job!</p>
+                {% endif %}
+            </div>
+            <a class="back-button" href="/">Analyze Another Resume</a>
+        </div>
+    </div>
+
+    <script>
+        const chart = document.getElementById("skillChart");
+
+        const matchedSkills = Number(chart.dataset.matched);
+        const missingSkills = Number(chart.dataset.missing);
+
+        new Chart(chart, {
+            type: "doughnut",
+            data: {
+                labels: ["Matched Skills", "Missing Skills"],
+                datasets: [{
+                    data: [matchedSkills, missingSkills]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
