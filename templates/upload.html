@@ -3,6 +3,7 @@
 
 <head>
 
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -17,6 +18,24 @@
 
 <body>
 
+    
+<div class="container">
+    <section class="hero">
+        <p>✦ AI-POWERED CAREER ASSISTANT</p>
+        <h1>Build a resume that<br>
+            <span style="color: #a78bfa;">gets noticed.</span>
+        </h1>
+        <p>
+            Analyze your skills, discover career gaps, and get
+            insights to make your resume stronger.
+        </p>
+    </section>
+
+    <!-- Keep your existing upload form here.
+         Add class="upload-card" to its outer wrapper,
+         or class="upload-form" to the form itself. -->
+</div>
+
     <div class="container">
 
         <div class="card">
@@ -29,33 +48,34 @@
 
             <form action="/upload" method="POST" enctype="multipart/form-data">
 
-                <div class="form-group">
+                
+<div class="form-group">
+    <label for="job_role">Select Job Role (optional if using a job description)</label>
 
-                    <label for="job_role">
-                        Select Job Role
-                    </label>
+    <select id="job_role" name="job_role">
+        <option value="">-- Select Job Role --</option>
 
-                    <select
-                        id="job_role"
-                        name="job_role"
-                        required
-                    >
+        {% for role in roles %}
+        <option value="{{ role }}">{{ role }}</option>
+        {% endfor %}
+    </select>
+</div>
 
-                        <option value="">
-                            -- Select Job Role --
-                        </option>
+<div class="form-group">
+    <label for="job_description">Paste Job Description (optional)</label>
 
-                        {% for role in roles %}
+    <textarea
+        id="job_description"
+        name="job_description"
+        rows="7"
+        placeholder="Paste the job description here, including required skills and qualifications..."
+    ></textarea>
 
-                            <option value="{{ role }}">
-                                {{ role }}
-                            </option>
-
-                        {% endfor %}
-
-                    </select>
-
-                </div>
+    <p class="hint">
+        Enter a job description to customize your analysis.
+        Otherwise, select a predefined role.
+    </p>
+</div>
 
 
                 <div class="form-group">

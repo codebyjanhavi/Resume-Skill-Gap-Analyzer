@@ -41,6 +41,43 @@
                 </div>
             </div>
 
+            
+<div class="skill-card">
+    <h2>ATS Readiness Check</h2>
+
+    <p>
+        Basic checklist score:
+        <strong>{{ ats_result.score }}%</strong>
+    </p>
+
+    <div class="progress-bar">
+        <div
+            class="progress-fill"
+            style="--progress: {{ ats_result.score }}%;">
+        </div>
+    </div>
+
+    <ul>
+        {% for item in ats_result.checks %}
+        <li>
+            {% if item.passed %}
+                <span class="status-pass">✓</span>
+                {{ item.name }} — Found
+            {% else %}
+                <span class="status-fail">!</span>
+                {{ item.name }} — Review needed
+                <p>{{ item.tip }}</p>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <p class="hint">
+        This is a basic resume checklist, not an actual ATS
+        compatibility test or hiring prediction.
+    </p>
+</div>
+
             <div class="skills-grid">
                 <div class="skill-card matched">
                     <h2>Matched Skills</h2>

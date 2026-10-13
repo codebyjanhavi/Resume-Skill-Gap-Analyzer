@@ -90,16 +90,41 @@ IT_SKILLS = [
 ]
 
 
+SKILL_ALIASES = {
+    "js": "JavaScript",
+    "javascript": "JavaScript",
+    "py": "Python",
+    "postgres": "PostgreSQL",
+    "postgresql": "PostgreSQL",
+    "scikit learn": "Scikit-learn",
+    "sklearn": "Scikit-learn",
+    "ml": "Machine Learning",
+    "ai": "Artificial Intelligence",
+    "nodejs": "Node.js",
+    "reactjs": "React",
+    "restful api": "REST API"
+}
+
+
+
 def extract_skills(text):
     text = str(text).lower()
+    found_skills = set()
 
-    found_skills = []
-
+    # Match the original skill vocabulary
     for skill in IT_SKILLS:
-
-        pattern = r"\b" + re.escape(skill.lower()) + r"\b"
+        pattern = r"(?<!\w)" + re.escape(
+            skill.lower()
+        ) + r"(?!\w)"
 
         if re.search(pattern, text):
-            found_skills.append(skill)
+            found_skills.add(skill)
+
+    # Match known aliases and normalize them
+    for alias, canonical_skill in SKILL_ALIASES.items():
+        pattern = r"(?<!\w)" + re.escape(alias) + r"(?!\w)"
+
+        if re.search(pattern, text):
+            found_skills.add(canonical_skill)
 
     return sorted(found_skills)
