@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import os
 import json
+from ml.match_predictor import predict_resume_match
 from ml.ats_checker import check_ats_readiness
 from werkzeug.utils import secure_filename
 from resume_parser.pdf_parser import extract_text_from_pdf
@@ -114,6 +115,18 @@ def upload_resume():
             result["missing_skills"]
         )
 
+        # Run the trained ML model 
+        ml_job_text = (
+            job_description
+            if job_description
+            else " ".join(required_skills)
+        )
+
+        match_result = predict_resume_match(
+            resume_text,
+            ml_job_text
+        )
+
         return render_template(
             "skills.html",
             role=display_role,
@@ -127,6 +140,7 @@ def upload_resume():
             ),
             recommendations=recommendations,
             ats_result=ats_result,
+            match_result=match_result,
         )
 
     finally:
